@@ -19,11 +19,11 @@ async function bootstrap() {
 
   // Загрузка переменных окружения из файла .env
   //dotenv.config();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { httpsOptions });
 
-  const httpsServer = https.createServer(httpsOptions, app.getHttpAdapter().getInstance());
+/*   const httpsServer = https.createServer(httpsOptions, app.getHttpAdapter().getInstance());
 console.log(httpsServer)
-console.log(JSON.stringify(httpsServer))
+console.log(JSON.stringify(httpsServer)) */
   
 
   await app.listen(port);
