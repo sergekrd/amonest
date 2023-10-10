@@ -13,8 +13,8 @@ async function bootstrap() {
   const certPath=process.env.certPath
  // let configService: MyConfigService
   const httpsOptions = {
-    key: fs.readFileSync(keyPath), // Путь к вашему закрытому ключу
-    cert: fs.readFileSync(certPath), // Путь к вашему SSL-сертификату
+    key:await fs.readFileSync(keyPath), // Путь к вашему закрытому ключу
+    cert: await fs.readFileSync(certPath), // Путь к вашему SSL-сертификату
   };
  console.log(JSON.stringify(httpsOptions))
   // Загрузка переменных окружения из файла .env
