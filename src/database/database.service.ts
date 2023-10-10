@@ -2,15 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { IDatabase, IMain } from 'pg-promise';
 //import { Connection } from 'pg-promise/typescript/pg-subset';
 import * as pgPromise from 'pg-promise';
-import { MyConfigService } from '../config/config.service';
+
+import * as dotenv from 'dotenv';
 
 @Injectable()
 export class DatabaseService {
   private readonly db: IDatabase<any>;
   private readonly pgp: IMain;
 
-  constructor(private readonly configService: MyConfigService) {
-    const dbConnectData = this.configService.getdbConnectData();
+  constructor() {
+    dotenv.config();
+    const dbConnectData = {
+    'user': process.env.dbUser,
+    'password' : process.env.dbPassword,
+    'host' : process.env.dbHost,
+    'port' : process.env.dbPort,
+    'database':  process.env.dbDatabase,
+    }
+      
 
     this.pgp = pgPromise();
     this.db = this.pgp(JSON.stringify(dbConnectData));
