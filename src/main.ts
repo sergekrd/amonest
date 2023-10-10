@@ -22,7 +22,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const httpsServer = https.createServer(httpsOptions, app.getHttpAdapter().getInstance());
-
+console.log(httpsServer)
   
 
   await app.listen(port);
