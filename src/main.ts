@@ -16,13 +16,14 @@ async function bootstrap() {
     key:await fs.readFileSync(keyPath), // Путь к вашему закрытому ключу
     cert: await fs.readFileSync(certPath), // Путь к вашему SSL-сертификату
   };
- console.log(JSON.stringify(httpsOptions))
+
   // Загрузка переменных окружения из файла .env
   //dotenv.config();
   const app = await NestFactory.create(AppModule);
 
   const httpsServer = https.createServer(httpsOptions, app.getHttpAdapter().getInstance());
 console.log(httpsServer)
+console.log(JSON.stringify(httpsServer))
   
 
   await app.listen(port);
