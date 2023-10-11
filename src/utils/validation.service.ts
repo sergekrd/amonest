@@ -50,7 +50,6 @@ export function validateName(name: string): boolean {
      // Удаление символов нецифровых символов
      const cleanedPhoneNumber = phoneNumber.replace(/[^\dА-Яа-яA-Za-z]/g, '');
 
-     console.log(cleanedPhoneNumber)
     // Проверка на наличие только цифр
     if (!/^\d+$/.test(cleanedPhoneNumber)) {
         throw new Error ('Неверный формат номера телефона, используйте только цифры') 

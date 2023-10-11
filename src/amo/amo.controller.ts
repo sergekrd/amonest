@@ -22,7 +22,7 @@ export class AmoController {
       if (!client_id || !client_secret || !code || !redirect_uri || !username) {
         throw new HttpException('Отсутствуют обязательные поля', HttpStatus.BAD_REQUEST);
       }
- 
+
       const authData = await this.amoService.getClientAuth(requestBody)
       await this.amoService.clientDataToDB(requestBody);
       await this.amoService.authDataToDB(authData, username);
@@ -34,13 +34,19 @@ export class AmoController {
     }
   }
 
-/*  */
+  /*  */
   @Get('/createdeal')
   @HttpCode(HttpStatus.OK) // Указываем статус ответа
   async setAuthKey(@Req() req) {
     try {
+
       const queryParameters = req.query;
       const { name, email, phone, amo_username } = queryParameters
+
+      if (!name || !email || !phone || !amo_username) {
+        throw new HttpException('Переданы не все данные, необходимы: name, email, phone, amo_username', HttpStatus.BAD_REQUEST);
+      }
+
       const [lastName, firstName] = name.split(' ')
 
       /* Проверка полученных данных контакта */
@@ -48,7 +54,6 @@ export class AmoController {
       validateLastName(firstName)
       validateEmail(email)
       const phoneNumber = validatePhoneNumber(phone)
-      console.log(phoneNumber)
 
       /* Получение актуального токена */
       const token = await this.authService.checkAuthTokenValidity(amo_username);
@@ -69,28 +74,29 @@ export class AmoController {
             message.push(`\r Фамилия не соответсвует, изменена с  ${user.last_name} на указанную в запросе ${lastName}`)
           }
           await this.amoService.updateContactToAmo(user.id, firstName, lastName, amo_username, token)
-        }     
+        }
       }
       else {
         /* контакта нет, добавляем в Амо, набор текста ответа на запрос */
         user = await this.amoService.addContactToAmo(phoneNumber, email, firstName, lastName, amo_username, token)
         message.push(`Контакт ${firstName} ${lastName} с телефоном ${phoneNumber} и почтой ${email} добавлен в AmoCRM`)
       }
-/* Получаем массив статусов воронки, нулевой статус "Неразобранное" не проходит проверку при добавлении сдели */
+      /* Получаем массив статусов воронки, нулевой статус "Неразобранное" не проходит проверку при добавлении сдели */
       const pipelineStatuses = await this.amoService.getPipelineStatuses(amo_username, token)
-      const pipelineId=pipelineStatuses[1].pipeline_id
-      const statusId=pipelineStatuses[1].id
+      const pipelineId = pipelineStatuses[1].pipeline_id
+      const statusId = pipelineStatuses[1].id
 
-/* Получаем массив статусов воронки, нулевой статус "Неразобранное" не проходит проверку при добавлении сдели */
+      /* Получаем массив статусов воронки, нулевой статус "Неразобранное" не проходит проверку при добавлении сдели */
       const dealName = `Сделка ${firstName} ${lastName}`
       const price = 1000
-      
-/* Создаем сделку с присваиванием статуса воронки и привязкой к контакту */
-      const dealId = await this.amoService.addDealToAmo(user.id, dealName, price,pipelineId,statusId, amo_username, token)
-      
+
+      /* Создаем сделку с присваиванием статуса воронки и привязкой к контакту */
+      const dealId = await this.amoService.addDealToAmo(user.id, dealName, price, pipelineId, statusId, amo_username, token)
+
       message.push(`Сделка "${dealName}" на ${price} создана и привязана к контакту ${firstName} ${lastName}`)
-    
+
       return { message: message }
+      
     } catch (error) {
       console.error('Ошибка:', error.message);
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
