@@ -11,7 +11,7 @@ export class DatabaseService {
 
   constructor() {
     dotenv.config();
-    const dbConnectData = {
+/*     const dbConnectData = {
     'user': process.env.dbUser,
     'password' : process.env.dbPassword,
     'host' : process.env.dbHost,
@@ -19,7 +19,7 @@ export class DatabaseService {
     'database':  process.env.dbDatabase,
     }
     const DATABASE_URL= process.env.DATABASE_URL
-    console.log(dbConnectData)
+    console.log(dbConnectData) */
       
 
     this.pgp = pgPromise();
@@ -167,7 +167,7 @@ export class DatabaseService {
     }
   }
 
-  async getAuth(username: string): Promise<any> {
+  async getAuthByUsername(username: string): Promise<any> {
     try {
       const result = await this.db.oneOrNone(
         'SELECT * FROM auth WHERE username = $1',
