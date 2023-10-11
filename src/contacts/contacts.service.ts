@@ -20,8 +20,7 @@ export class ContactsService {
       // Добавляем запись в таблицу data, оставляя поле code пустым
       const newData = await this.databaseService.insertData(
         client_id, // Ваши данные для вставки
-        client_secret,
-        grant_type,
+        client_secret, 
         code,
         redirect_uri,
         username,

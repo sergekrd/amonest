@@ -76,8 +76,7 @@ export class DatabaseService {
 
   async insertData(
     client_id: string,
-    client_secret: string,
-    grant_type: string,
+    client_secret: string,  
     code: string,
     redirect_uri: string,
     username: string,
@@ -85,11 +84,11 @@ export class DatabaseService {
     try {
       const newData = await this.db.one(
         `
-          INSERT INTO data (client_id, client_secret, grant_type, code, redirect_uri, username)
-          VALUES ($1, $2, $3, $4, $5, $6)
+          INSERT INTO data (client_id, client_secret, code, redirect_uri, username)
+          VALUES ($1, $2, $3, $4, $5)
           RETURNING *;
         `,
-        [client_id, client_secret, grant_type, code, redirect_uri, username],
+        [client_id, client_secret, code, redirect_uri, username],
       );
       return true;
     } catch (error) {
