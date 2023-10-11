@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { IDatabase, IMain } from 'pg-promise';
-//import { Connection } from 'pg-promise/typescript/pg-subset';
 import * as pgPromise from 'pg-promise';
 
 import * as dotenv from 'dotenv';
@@ -19,11 +18,12 @@ export class DatabaseService {
     'port' : process.env.dbPort,
     'database':  process.env.dbDatabase,
     }
+    const DATABASE_URL= process.env.DATABASE_URL
     console.log(dbConnectData)
       
 
     this.pgp = pgPromise();
-    this.db = this.pgp(JSON.stringify(dbConnectData));  
+    this.db = this.pgp({ connectionString: process.env.DATABASE_URL,});  
   }
 
   async createTables(): Promise<void> {
