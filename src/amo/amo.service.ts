@@ -9,30 +9,39 @@ export class AmoService {
     private readonly databaseService: DatabaseService,
   ) { }
 
-  async setClientData(data) {
+  async clientDataToDB(clientData) {
     try {
-      const { client_id, client_secret, code, redirect_uri, username } = data;
-
+      const { client_id, client_secret, code, redirect_uri, username } = clientData;
       const newData = await this.databaseService.insertData(
         client_id,
-        client_secret,   
+        client_secret,
         code,
         redirect_uri,
         username,
       );
-
-      // Отправляем POST-запрос на нужный вам эндпоинт с данными newData
-      const response = await axios.post('https://example.com/your-endpoint', newData);
-
-      // Проверяем статус ответа
-      if (response.status === 200) {
-        // Возвращаете результат
-        return response.data;
-      } else {
-        throw new HttpException('Ошибка при отправке POST-запроса', HttpStatus.INTERNAL_SERVER_ERROR);
-      }
+    
     } catch (error) {
+      console.error(error)
       throw new HttpException('Ошибка сохранения данных', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async authDataToDB(authData,username) {
+    try {
+      const { token_type, access_token, refresh_token} = authData;
+      let {expires_in}=authData
+      expires_in = parseInt(expires_in) + Math.floor(Date.now() / 1000)
+      const newData = await this.databaseService.insertAuth(
+        token_type,
+        expires_in,
+        access_token,
+        refresh_token,
+        username,
+      );
+    
+    } catch (error) {
+      console.error(error)
+      throw new HttpException('Ошибка сохранения токенов данных', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -40,19 +49,17 @@ export class AmoService {
     try {
       const { client_id, client_secret, code, redirect_uri, username } = data;
 
- const newData={
-  client_id,client_secret,code,redirect_uri,grant_type:'authorization_code'
- }
- console.log(newData)
+      const newData = {
+        client_id, client_secret, code, redirect_uri, grant_type: 'authorization_code'
+      }
 
-      // Отправляем POST-запрос на нужный вам эндпоинт с данными newData
+      const url = `https://${username}.amocrm.ru/oauth2/access_token`
       const response = await axios.post(`https://${username}.amocrm.ru/oauth2/access_token`, newData);
-console.log(response)
-      // Проверяем статус ответа
+
       if (response.status === 200) {
-        // Возвращаете результат
         return response.data;
       } else {
+        console.error(`Ошибка при отправке POST-запроса на ${url}`)
         throw new HttpException('Ошибка при отправке POST-запроса', HttpStatus.INTERNAL_SERVER_ERROR);
       }
     } catch (error) {

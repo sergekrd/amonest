@@ -19,10 +19,11 @@ export class DatabaseService {
     'port' : process.env.dbPort,
     'database':  process.env.dbDatabase,
     }
+    console.log(dbConnectData)
       
 
     this.pgp = pgPromise();
-    this.db = this.pgp(JSON.stringify(dbConnectData));
+    this.db = this.pgp(JSON.stringify(dbConnectData));  
   }
 
   async createTables(): Promise<void> {
@@ -41,8 +42,7 @@ export class DatabaseService {
         CREATE TABLE IF NOT EXISTS data (
             id SERIAL PRIMARY KEY,
             client_id VARCHAR(255),
-            client_secret VARCHAR(255),
-            grant_type VARCHAR(255),
+            client_secret VARCHAR(255),           
             code TEXT,
             redirect_uri VARCHAR(255),
             username VARCHAR(255) UNIQUE

@@ -19,7 +19,9 @@ export class AmoController {
       const authData = await this.amoService.getClientAuth(requestBody)
       console.log(authData)
 
-      const newData = await this.amoService.setClientData(requestBody);
+     await this.amoService.clientDataToDB(requestBody);
+     await this.amoService.authDataToDB (authData,username);
+
       return { message: 'Данные успешно добавлены' }
     } catch (error) {
       console.error('Ошибка:', error.message);
@@ -39,7 +41,7 @@ export class AmoController {
       if (!client_id || !client_secret || !grant_type || !code || !redirect_uri || !username) {
         throw new HttpException('Отсутствуют обязательные поля', HttpStatus.BAD_REQUEST);
       }
-      const newData = await this.amoService.setClientData(requestBody);
+      const newData = await this.amoService.clientDataToDB(requestBody);
       return { message: 'Данные успешно добавлены' }
     } catch (error) {
       console.error('Ошибка:', error.message);
