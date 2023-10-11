@@ -39,14 +39,14 @@ export class AmoService {
   async getClientAuth(data) {
     try {
       const { client_id, client_secret, code, redirect_uri, username } = data;
-      
+
  const newData={
   client_id,client_secret,code,redirect_uri,grant_type:'authorization_code'
  }
 
       // Отправляем POST-запрос на нужный вам эндпоинт с данными newData
       const response = await axios.post(`https://${username}.amocrm.ru/oauth2/access_token`, newData);
-
+console.log(response)
       // Проверяем статус ответа
       if (response.status === 200) {
         // Возвращаете результат
