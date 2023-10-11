@@ -56,7 +56,8 @@ console.log(response)
         throw new HttpException('Ошибка при отправке POST-запроса', HttpStatus.INTERNAL_SERVER_ERROR);
       }
     } catch (error) {
-      throw new HttpException('Ошибка сохранения данных', HttpStatus.INTERNAL_SERVER_ERROR);
+      console.error(error)
+      throw new HttpException('Ошибка получения токена авторизации', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
