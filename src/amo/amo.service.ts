@@ -43,6 +43,7 @@ export class AmoService {
  const newData={
   client_id,client_secret,code,redirect_uri,grant_type:'authorization_code'
  }
+ console.log(newData)
 
       // Отправляем POST-запрос на нужный вам эндпоинт с данными newData
       const response = await axios.post(`https://${username}.amocrm.ru/oauth2/access_token`, newData);

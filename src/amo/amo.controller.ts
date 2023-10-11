@@ -15,6 +15,7 @@ export class AmoController {
       if (!client_id || !client_secret || !code || !redirect_uri || !username) {
         throw new HttpException('Отсутствуют обязательные поля', HttpStatus.BAD_REQUEST);
       }
+      console.log(requestBody)
       const authData = await this.amoService.getClientAuth(requestBody)
       console.log(authData)
 
