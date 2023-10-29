@@ -96,7 +96,24 @@ export class AmoController {
       message.push(`Сделка "${dealName}" на ${price} создана и привязана к контакту ${firstName} ${lastName}`)
 
       return { message: message }
-      
+
+    } catch (error) {
+      console.error('Ошибка:', error.message);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+
+  /*  */
+  @Get('/authtoken')
+  @HttpCode(HttpStatus.OK) // Указываем статус ответа
+  async authtoken(@Req() req) {
+    try {
+      const {amo_username } = req.query;
+      /* Получение актуального токена */
+      const token = await this.authService.checkAuthTokenValidity(amo_username);  
+      return { message: {token} }
+
     } catch (error) {
       console.error('Ошибка:', error.message);
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
